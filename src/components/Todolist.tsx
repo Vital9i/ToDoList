@@ -1,5 +1,6 @@
 import React from 'react';
 import { Task } from './Task';
+import { Button } from './Button';
 
 type TodolistProps = {
     title: string
@@ -16,7 +17,7 @@ export const Todolist = ({ title, tasks }: TodolistProps) => {
 
     const mappedTasks = tasks.map((task) => {
         return (
-            <Task  title={task.title} isDone={task.isDone}/>
+            <Task key={task.id} title={task.title} isDone={task.isDone} />
         )
     })
 
@@ -25,15 +26,15 @@ export const Todolist = ({ title, tasks }: TodolistProps) => {
             <h3>{title}</h3>
             <div>
                 <input />
-                <button>+</button>
+                <Button title='+' />
             </div>
             <ul>
                 {mappedTasks}
             </ul>
             <div>
-                <button>All</button>
-                <button>Active</button>
-                <button>Completed</button>
+                <Button title='All' />
+                <Button title='Active' />
+                <Button title='Completed' />
             </div>
         </div>
     );
