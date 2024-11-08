@@ -1,5 +1,5 @@
 import React from "react"
-import { Button } from "./Button"
+
 
 type Props={
     title:string
@@ -31,11 +31,7 @@ export const Todolist = ({title,fura,tasks}:Props)=> {
                 return(
             <li key={task.id}><input type="checkbox" checked={task.isDone}/> <span>{task.title}</span></li>)})}
         </ul>
-        <div>
-            <Button title={"all"} />
-            <Button title={"Active"} />
-            <Button title={"Completed"} />
-            </div>
+        
     </div>
     )
 }
