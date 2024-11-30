@@ -5,6 +5,8 @@ import { Button } from './Button';
 type TodolistProps = {
     title: string
     tasks: TaskProps[]
+    removeTasks:(taskId: number)=>void
+    changeFilter:(filter:number)=>void
 }
 
 type TaskProps = {
@@ -13,11 +15,15 @@ type TaskProps = {
     isDone: boolean
 }
 
-export const Todolist = ({ title, tasks }: TodolistProps) => {
+export const Todolist = ({ title, tasks,removeTasks,changeFilter }: TodolistProps) => {
 
     const mappedTasks = tasks.map((task) => {
         return (
-            <Task key={task.id} title={task.title} isDone={task.isDone} />
+            <li key={task.id}>
+                <button onClick={()=>{removeTasks(task.id)}}>x</button>
+                <span>{task.title}</span>
+                <input type="checkbox" checked={task.isDone}  />
+            </li> 
         )
     })
 
@@ -32,9 +38,12 @@ export const Todolist = ({ title, tasks }: TodolistProps) => {
                 {mappedTasks}
             </ul>
             <div>
-                <Button title='All' />
+                <button onClick={()=>{changeFilter(01)}}>All</button>
+                <button onClick={()=>{changeFilter(02)}}>Active</button>
+                <button onClick={()=>{changeFilter(03)}}>Completed</button>
+                {/* <Button title='All' />
                 <Button title='Active' />
-                <Button title='Completed' />
+                <Button title='Completed' /> */}
             </div>
         </div>
     );
