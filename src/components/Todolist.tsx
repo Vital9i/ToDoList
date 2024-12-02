@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {Task} from './Task';
 import {Button} from './Button';
-import {FilterValueType} from '../App'
+import {TaskNameType} from "../App";
 
-type TodolistProps = {
+export type TodolistProps = {
     title: string
     tasks: TaskProps[]
+    removeTasks: (taskId:number) => void
+    changeTasks: (taskName:TaskNameType) => void
 }
 
 type TaskProps = {
@@ -14,17 +15,7 @@ type TaskProps = {
     isDone: boolean
 }
 
-export const Todolist = ({title, tasks,}: TodolistProps) => {
-
-    const mappedTasks = tasks.map((task) => {
-        return (
-            <li key={task.id}>
-                <span>{task.title}</span>
-                <input type="checkbox" checked={task.isDone}/>
-            </li>
-        )
-    })
-
+export const Todolist = ({title, tasks,removeTasks,changeTasks}: TodolistProps) => {
     return (
         <div>
             <h3>{title}</h3>
@@ -32,14 +23,23 @@ export const Todolist = ({title, tasks,}: TodolistProps) => {
                 <input/>
                 <Button title='+'/>
             </div>
-            <ul>
-                {mappedTasks}
-            </ul>
+            {
+                tasks.length === 0
+                    ? <p>тасок нет</p>
+                    : <ul>
+                        {tasks.map((task) => {
+                            return (
+                                <li key={task.id}>
+                                    <button onClick={()=>{removeTasks(task.id)}}>X</button>
+                                    <span>{task.title}</span>
+                                    <input type="checkbox" checked={task.isDone}/>
+                                </li>)
+                        })}
+                    </ul>}
             <div>
-                <button>All</button>
-                <button>Active</button>
-                <button>Completed</button>
-
+                <button onClick={()=>{changeTasks('All')}}>All</button>
+                <button onClick={()=>{changeTasks('Active')}}>Active</button>
+                <button onClick={()=>{changeTasks('Completed')}}>Completed</button>
             </div>
         </div>
     );
