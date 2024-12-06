@@ -38,21 +38,33 @@ function App() {
         {id: 6, title: 'RTK query', isDone: false},
     ])
 
+    const deleteTasks = (deleteTasks: string) => {
+        setTaskNameForDrushlag(deleteTasks)
+    }
+
+    const firstThreeTasks = (firstThreeTasks: string) => {
+        setTaskNameForDrushlag(firstThreeTasks)
+    }
+
     const removeTasks = (taskId: number) => {
         console.log(taskId)
         setTasks(tasks.filter(task => task.id !== taskId))
     }
-
-    let [taskNameForDrushlag, setTaskNameForDrushlag] = useState('All')
 
     const changeTasks = (taskName: TaskNameType) => {
         console.log(taskName)
         setTaskNameForDrushlag(taskName);
     }
 
-
+    let [taskNameForDrushlag, setTaskNameForDrushlag] = useState('All')
     let drushlaq = tasks;
     switch (taskNameForDrushlag) {
+        case 'delete':
+            drushlaq = [];
+            break;
+        case 'firstThreeTasks':
+            drushlaq = tasks.slice(0, 3);
+            break;
         case 'All':
             drushlaq = tasks;
             break;
@@ -74,6 +86,8 @@ function App() {
                       tasks={drushlaq}
                       removeTasks={removeTasks}
                       changeTasks={changeTasks}
+                      deleteTasks={deleteTasks}
+                      firstThreeTasks={firstThreeTasks}
             />
         </div>
     );

@@ -7,6 +7,8 @@ export type TodolistProps = {
     tasks: TaskProps[]
     removeTasks: (taskId: number) => void
     changeTasks: (taskName: TaskNameType) => void
+    deleteTasks: (deleteTask:string) => void
+    firstThreeTasks: (firstThreeTasks:string) => void
 }
 
 type TaskProps = {
@@ -15,10 +17,7 @@ type TaskProps = {
     isDone: boolean
 }
 
-export const Todolist = ({title, tasks, removeTasks, changeTasks}: TodolistProps) => {
-
-
-
+export const Todolist = ({title, tasks, removeTasks, changeTasks, deleteTasks, firstThreeTasks}: TodolistProps) => {
     return (
         <div>
             <h3>{title}</h3>
@@ -44,6 +43,13 @@ export const Todolist = ({title, tasks, removeTasks, changeTasks}: TodolistProps
                     </ul>}
             <div>
                 <button onClick={() => {
+                    deleteTasks('delete')
+                }}>
+                    Delete Tasks
+                </button>
+            </div>
+            <div>
+                <button onClick={() => {
                     changeTasks('All')
                 }}>All
                 </button>
@@ -55,7 +61,12 @@ export const Todolist = ({title, tasks, removeTasks, changeTasks}: TodolistProps
                     changeTasks('Completed')
                 }}>Completed
                 </button>
+                <button onClick={() => {
+                    firstThreeTasks('firstThreeTasks')
+                }}>firstThreeTasks
+                </button>
             </div>
         </div>
     );
 }
+
