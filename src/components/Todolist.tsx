@@ -17,6 +17,8 @@ type TaskProps = {
 
 export const Todolist = ({title, tasks, removeTasks, changeTasks}: TodolistProps) => {
 
+
+
     return (
         <div>
             <h3>{title}</h3>
