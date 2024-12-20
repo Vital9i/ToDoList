@@ -1,56 +1,43 @@
 import React, {useState} from 'react';
 import './App.css';
-import {Todolist} from './components/Todolist';
+import {TaskProps, Todolist} from './components/Todolist';
+import {v1} from "uuid";
 
 export  type TaskNameType = 'All' | 'Active' | 'Completed'
-
-//Hi guys!
-//1. Let's create a 'DELETE ALL TASKS' button, and place it above the filter buttons
-//Clicking the button removes all tasks
-//2. Let's create a fourth filter button-if you click it, the first three tasks will be displayed
-//3. Relocate everything associated with  filters to the Todolist.tsx component. Make it work
-//
-// let [filter, setFilter] = useState<FilterValuesType>("all");
-//
-// let tasksForTodolist = tasks;
-//
-// if (filter === "active") {
-//     tasksForTodolist = tasks.filter(t => t.isDone === false);
-// }
-// if (filter === "completed") {
-//     tasksForTodolist = tasks.filter(t => t.isDone === true);
-// }
-//
-// function changeFilter(value: FilterValuesType) {
-//     setFilter(value);
-// }
 
 function App() {
 
     const titleText1 = 'What to learn-1'
 
     let [tasks, setTasks] = useState([
-        {id: 1, title: 'HTML&CSS', isDone: true},
-        {id: 2, title: 'JS', isDone: true},
-        {id: 3, title: 'ReactJS', isDone: false},
-        {id: 4, title: 'Redux', isDone: false},
-        {id: 5, title: 'Typescript', isDone: true},
-        {id: 6, title: 'RTK query', isDone: false},
+        {id: v1(), title: 'HTML&CSS', isDone: true},
+        {id: v1(), title: 'JS', isDone: true},
+        {id: v1(), title: 'ReactJS', isDone: false},
+        {id: v1(), title: 'Redux', isDone: false},
+        {id: v1(), title: 'Typescript', isDone: true},
+        {id: v1(), title: 'RTK query', isDone: false},
     ])
 
-    const deleteTasks = (deleteTasks: string) => {
-        setTaskNameForDrushlag(deleteTasks)
+    const addTask = (addTask:string)=>{
+        console.log(addTask);
+        const newTask:TaskProps = {id: v1(), title: 'New-new', isDone: false}
+        setTasks([newTask,...tasks])
     }
 
-    const firstThreeTasks = (firstThreeTasks: string) => {
-        setTaskNameForDrushlag(firstThreeTasks)
+    const deleteTasks = (deleteTasks:string) =>{
+        console.log(deleteTasks)
+        setTaskNameForDrushlag(deleteTasks);
     }
 
-    const removeTasks = (taskId: number) => {
+    const firstThreeTasks = (firstThreeTasks:string) =>{
+        console.log(firstThreeTasks)
+        setTaskNameForDrushlag(firstThreeTasks);
+    }
+
+    const removeTasks = (taskId: string) => {
         console.log(taskId)
         setTasks(tasks.filter(task => task.id !== taskId))
     }
-
     const changeTasks = (taskName: TaskNameType) => {
         console.log(taskName)
         setTaskNameForDrushlag(taskName);
@@ -79,7 +66,6 @@ function App() {
             break;
     }
 
-
     return (
         <div className='App'>
             <Todolist title={titleText1}
@@ -88,6 +74,7 @@ function App() {
                       changeTasks={changeTasks}
                       deleteTasks={deleteTasks}
                       firstThreeTasks={firstThreeTasks}
+                      addTask={addTask}
             />
         </div>
     );

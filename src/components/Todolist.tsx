@@ -1,28 +1,31 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {Button} from './Button';
 import {TaskNameType} from "../App";
 
 export type TodolistProps = {
     title: string
     tasks: TaskProps[]
-    removeTasks: (taskId: number) => void
-    changeTasks: (taskName: TaskNameType) => void
-    deleteTasks: (deleteTask:string) => void
+    removeTasks: (taskId: string) => void
+    changeTasks: (taskName:TaskNameType) => void
+    deleteTasks: (deleteTasks:string) => void
     firstThreeTasks: (firstThreeTasks:string) => void
+    addTask:(addTask:string) => void
 }
-
-type TaskProps = {
-    id: number
+export type TaskProps = {
+    id: string
     title: string
     isDone: boolean
 }
+export const Todolist = ({title, tasks,removeTasks, changeTasks, deleteTasks, firstThreeTasks,addTask}: TodolistProps) => {
 
-export const Todolist = ({title, tasks, removeTasks, changeTasks, deleteTasks, firstThreeTasks}: TodolistProps) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
     return (
         <div>
             <h3>{title}</h3>
             <div>
-                <input/>
+                <input ref={inputRef}/>
+                <button onClick={()=>addTask('addTask')}>AddTask</button>
                 <Button title='+'/>
             </div>
             {
