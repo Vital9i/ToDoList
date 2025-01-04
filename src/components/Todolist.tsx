@@ -28,17 +28,29 @@ export const Todolist = ({
                              addTasks,
                          }: TodolistProps) => {
 
-    const inputRef = useRef<HTMLInputElement>(null);
+const[newTitleTask, setNewTitleTask] = useState('')
 
     return (
         <div>
             <h3>{title}</h3>
             <div>
-                <input ref={inputRef}/>
+                <input
+                    value={newTitleTask}
+                    onChange={(e)=>setNewTitleTask(e.currentTarget.value)}
+                    onKeyDown={(e)=>{
+                        if (e.key === "Enter") {
+                            addTasks(newTitleTask);
+                            setNewTitleTask('')
+                        }
+                    }}
+                />
                 <button onClick={()=>{
-                    if(inputRef.current){
-                    addTasks(inputRef.current.value)
-                    inputRef.current.value = ""}
+
+
+                    addTasks(newTitleTask);
+                    setNewTitleTask('')
+
+
                 }}>AddTasks</button>
                 <Button title='+'/>
             </div>
