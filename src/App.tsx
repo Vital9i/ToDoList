@@ -3,7 +3,7 @@ import './App.css';
 import {TaskProps, Todolist} from './components/Todolist';
 import {v1} from "uuid";
 
-export  type TaskNameType = 'All' | 'Active' | 'Completed'
+export  type TaskNameType = 'All' | 'Active' | 'Completed' | 'Delete' | 'firstThreeTasks'
 
 function App() {
 

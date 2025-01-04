@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, KeyboardEvent, ChangeEvent} from 'react';
 import {Button} from './Button';
 import {TaskNameType} from "../App";
 
@@ -28,7 +28,39 @@ export const Todolist = ({
                              addTasks,
                          }: TodolistProps) => {
 
-const[newTitleTask, setNewTitleTask] = useState('')
+    const[newTitleTask, setNewTitleTask] = useState('')
+
+    const changeTasksHandler = (value:TaskNameType) =>{
+    changeTasks(value)
+    }
+
+
+    const addTasksHandler =() =>{
+        addTasks(newTitleTask);
+        setNewTitleTask('')
+    }
+
+    const onKeyDownHandler = (e:KeyboardEvent<HTMLInputElement>)=>{
+            if (e.key === "Enter") {
+                addTasksHandler()
+            }
+        }
+
+    const onChangeHandler =(e:ChangeEvent<HTMLInputElement>)=>{
+        setNewTitleTask(e.currentTarget.value)
+    }
+
+    const mappedTasks = tasks.map((task) => {
+        const removeTaskHandler =() =>{
+            removeTasks(task.id)
+        }
+        return (
+            <li key={task.id}>
+                <button onClick={removeTaskHandler}>X</button>
+                <span>{task.title}</span>
+                <input type="checkbox" checked={task.isDone}/>
+            </li>)
+    })
 
     return (
         <div>
@@ -36,64 +68,23 @@ const[newTitleTask, setNewTitleTask] = useState('')
             <div>
                 <input
                     value={newTitleTask}
-                    onChange={(e)=>setNewTitleTask(e.currentTarget.value)}
-                    onKeyDown={(e)=>{
-                        if (e.key === "Enter") {
-                            addTasks(newTitleTask);
-                            setNewTitleTask('')
-                        }
-                    }}
+                    onChange={onChangeHandler}
+                    onKeyDown={onKeyDownHandler}
                 />
-                <button onClick={()=>{
 
-
-                    addTasks(newTitleTask);
-                    setNewTitleTask('')
-
-
-                }}>AddTasks</button>
-                <Button title='+'/>
+                <button onClick={addTasksHandler}>AddTasks</button>
             </div>
-            {
-                tasks.length === 0
+            {tasks.length === 0
                     ? <p>тасок нет</p>
                     : <ul>
-                        {tasks.map((task) => {
-                            return (
-                                <li key={task.id}>
-                                    <button onClick={() => {
-                                        removeTasks(task.id)
-                                    }}>X
-                                    </button>
-                                    <span>{task.title}</span>
-                                    <input type="checkbox" checked={task.isDone}/>
-                                </li>)
-                        })}
+                        {mappedTasks}
                     </ul>}
             <div>
-                <button onClick={() => {
-                    deleteTasks('delete')
-                }}>
-                    Delete Tasks
-                </button>
-            </div>
-            <div>
-                <button onClick={() => {
-                    changeTasks('All')
-                }}>All
-                </button>
-                <button onClick={() => {
-                    changeTasks('Active')
-                }}>Active
-                </button>
-                <button onClick={() => {
-                    changeTasks('Completed')
-                }}>Completed
-                </button>
-                <button onClick={() => {
-                    firstThreeTasks('firstThreeTasks')
-                }}>firstThreeTasks
-                </button>
+                <button onClick={()=>changeTasksHandler('Delete')}>delete Tasks</button>
+                <button onClick={()=>changeTasksHandler('All')}>All</button>
+                <button onClick={()=>changeTasksHandler('Active')}>Active</button>
+                <button onClick={()=>changeTasksHandler('Completed')}>Completed</button>
+                <button onClick={()=>changeTasksHandler('firstThreeTasks')}>firstThreeTasks</button>
             </div>
         </div>
     );
