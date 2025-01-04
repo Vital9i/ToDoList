@@ -18,18 +18,17 @@ function App() {
         {id: v1(), title: 'RTK query', isDone: false},
     ])
 
-    const addTask = (addTask:string)=>{
-        console.log(addTask);
-        const newTask:TaskProps = {id: v1(), title: 'New-new', isDone: false}
-        setTasks([newTask,...tasks])
+    const addTasks = (newTitleTask:string)=>{
+        const newTasks:TaskProps = {id: v1(), title: newTitleTask, isDone: false}
+        setTasks([newTasks,...tasks])
     }
 
-    const deleteTasks = (deleteTasks:string) =>{
+    const deleteTasks = (deleteTasks: string) => {
         console.log(deleteTasks)
         setTaskNameForDrushlag(deleteTasks);
     }
 
-    const firstThreeTasks = (firstThreeTasks:string) =>{
+    const firstThreeTasks = (firstThreeTasks: string) => {
         console.log(firstThreeTasks)
         setTaskNameForDrushlag(firstThreeTasks);
     }
@@ -38,6 +37,7 @@ function App() {
         console.log(taskId)
         setTasks(tasks.filter(task => task.id !== taskId))
     }
+
     const changeTasks = (taskName: TaskNameType) => {
         console.log(taskName)
         setTaskNameForDrushlag(taskName);
@@ -74,7 +74,7 @@ function App() {
                       changeTasks={changeTasks}
                       deleteTasks={deleteTasks}
                       firstThreeTasks={firstThreeTasks}
-                      addTask={addTask}
+                      addTasks={addTasks}
             />
         </div>
     );

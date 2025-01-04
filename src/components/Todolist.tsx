@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {Button} from './Button';
 import {TaskNameType} from "../App";
 
@@ -6,17 +6,27 @@ export type TodolistProps = {
     title: string
     tasks: TaskProps[]
     removeTasks: (taskId: string) => void
-    changeTasks: (taskName:TaskNameType) => void
-    deleteTasks: (deleteTasks:string) => void
-    firstThreeTasks: (firstThreeTasks:string) => void
-    addTask:(addTask:string) => void
-}
+    changeTasks: (taskName: TaskNameType) => void
+    deleteTasks: (deleteTasks: string) => void
+    firstThreeTasks: (firstThreeTasks: string) => void
+    addTasks:(addTasks:string) => void
+    }
+
 export type TaskProps = {
     id: string
     title: string
     isDone: boolean
 }
-export const Todolist = ({title, tasks,removeTasks, changeTasks, deleteTasks, firstThreeTasks,addTask}: TodolistProps) => {
+
+export const Todolist = ({
+                             title,
+                             tasks,
+                             removeTasks,
+                             changeTasks,
+                             deleteTasks,
+                             firstThreeTasks,
+                             addTasks,
+                         }: TodolistProps) => {
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -25,7 +35,11 @@ export const Todolist = ({title, tasks,removeTasks, changeTasks, deleteTasks, fi
             <h3>{title}</h3>
             <div>
                 <input ref={inputRef}/>
-                <button onClick={()=>addTask('addTask')}>AddTask</button>
+                <button onClick={()=>{
+                    if(inputRef.current){
+                    addTasks(inputRef.current.value)
+                    inputRef.current.value = ""}
+                }}>AddTasks</button>
                 <Button title='+'/>
             </div>
             {
