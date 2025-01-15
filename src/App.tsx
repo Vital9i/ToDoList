@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './App.css';
-import {Todolist} from './Todolist';
-import {v1} from 'uuid';
+import { Todolist } from './Todolist';
+import { v1 } from 'uuid';
+import { Button } from './components/Button';
 
 
 type ObjectType = {
@@ -26,8 +27,8 @@ function App() {
             title: "What to learn",
             filter: "all",
             tasks: [
-                {taskId: v1(), title: "HTML&CSS", isDone: true},
-                {taskId: v1(), title: "JS", isDone: true}
+                { taskId: v1(), title: "HTML&CSS", isDone: true },
+                { taskId: v1(), title: "JS", isDone: true }
             ],
             students: [
                 'Rick Kane',
@@ -86,8 +87,8 @@ function App() {
             title: "What to do",
             filter: "all",
             tasks: [
-                {taskId: v1(), title: "HTML&CSS2", isDone: true},
-                {taskId: v1(), title: "JS2", isDone: true}
+                { taskId: v1(), title: "HTML&CSS2", isDone: true },
+                { taskId: v1(), title: "JS2", isDone: true }
             ],
             students: [
                 'Jago Wormald1',
@@ -147,32 +148,32 @@ function App() {
     }
 
     function addTask(title: string, todolistId: number) {
-        let newTask: TasksType = {taskId: v1(), title: title, isDone: false};
-        setTodo(todo.map((el, index) => index === todolistId ? {...el, tasks: [newTask, ...el.tasks]} : el))
+        let newTask: TasksType = { taskId: v1(), title: title, isDone: false };
+        setTodo(todo.map((el, index) => index === todolistId ? { ...el, tasks: [newTask, ...el.tasks] } : el))
     }
 
     function changeStatus(taskId: string, isDone: boolean, todolistId: number) {
         setTodo(todo.map((el, index) => index === todolistId ? {
             ...el,
-            tasks: el.tasks.map(m => m.taskId === taskId ? {...m, isDone: isDone} : m)
+            tasks: el.tasks.map(m => m.taskId === taskId ? { ...m, isDone: isDone } : m)
         } : el))
     }
 
     function changeFilter(value: FilterValuesType, todolistId: number) {
-        setTodo(todo.map((el, index) => index === todolistId ? {...el, filter: value} : el))
+        setTodo(todo.map((el, index) => index === todolistId ? { ...el, filter: value } : el))
     }
 
     function removeTodolist(todolistId: number) {
         setTodo(todo.filter((el, index) => index !== todolistId))
     }
 
-    const removeAllTodolists = () => {
-    //todo: САМОСТОЯТЕЛЬНО
+    const removeAllTodolistsHandler = () => {
+        setTodo([])
     }
 
     const removeAllTasksInOneTodo = (todolistId: number) => {
         setTodo(prevState => prevState.map((t, index) => index === todolistId
-            ? {...t, tasks: []}
+            ? { ...t, tasks: [] }
             : t
         ))
     }
@@ -180,11 +181,12 @@ function App() {
     return (
         <div className="App">
             <div>
-
+                <Button title='removeAllToDoLists' onClick={removeAllTodolistsHandler} />
             </div>
 
             {
                 todo.map((tl, index) => {
+
                     let allTodolistTasks = tl.tasks;
                     let tasksForTodolist = allTodolistTasks;
 
@@ -207,7 +209,7 @@ function App() {
                         changeTaskStatus={changeStatus}
                         filter={tl.filter}
                         removeTodolist={removeTodolist}
-
+                        removeAllTasksInOneTodo={removeAllTasksInOneTodo}
                     />
                 })
             }
