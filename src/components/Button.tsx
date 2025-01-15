@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { ButtonHTMLAttributes, HtmlHTMLAttributes } from 'react';
 
-type Props = {
-    title:string
-}
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
 
-export const Button = ({title}:Props) => {
+// type ButtonProps = {
+//     title: string
+//     onClick: () => void
+// }
+
+export const Button = ({ title, onClick }: ButtonProps) => {
     return (
-        
-        <button>{title}</button>
+        <button onClick={onClick}>{title}</button>
     );
 };
 
