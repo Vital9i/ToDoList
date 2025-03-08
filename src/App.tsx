@@ -1,60 +1,223 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import {Country} from "./Country";
-import {v1} from "uuid";
+import { Todolist } from './Todolist';
+import { v1 } from 'uuid';
 
-export type BanknotsType = '' // создадим типы для banknotes -он может быть 'DOLLARS', 'RUBLS' или 'All'
-export type MoneyType = {
-    banknote: BanknotsType
-    nominal: any// не ленимся, убираем заглушку, и пишем правильный тип)
-    id: any// ложку за Димыча, за...
+type TodosType = {
+    todolistId: string
+} & ObjectType
+
+type ObjectType = {
+    title: string
+    filter: FilterValuesType
+    tasks: Array<TasksType>
+    students: Array<string>
+}
+export type TasksType = {
+    taskId: string
+    title: string
+    isDone: boolean
 }
 
-let defaultMoney: any = [  // типизируем
-    {banknote: 'USD', nominal: 100, id: v1()},
-    {banknote: 'USD', nominal: 100, id: v1()},
-    {banknote: 'RUB', nominal: 100, id: v1()},
-    {banknote: 'USD', nominal: 100, id: v1()},
-    {banknote: 'USD', nominal: 100, id: v1()},
-    {banknote: 'RUB', nominal: 100, id: v1()},
-    {banknote: 'USD', nominal: 100, id: v1()},
-    {banknote: 'RUB', nominal: 100, id: v1()},
-]
-
-
-export const moneyFilter = (money: any, filter: any): any => {
-    //если пришел filter со значением 'All', то возвращаем все банкноты
-    //return money.filter... ну да, придется фильтровать
-}
-
+export type FilterValuesType = "all" | "active" | "completed";
 
 function App() {
-    // убираем заглушки в типизации и вставляем в качестве инициализационного значения defaultMoney
-    const [money, setMoney] = useState<any>([])
-    const [filterValue, setFilterValue] = useState<any>('')   // по умолчанию указываем все банкноты
 
-    // а вот сейчас притормаживаем. И вдумчиво: константа filteredMoney получает результат функции moneyFilter
-    // в функцию передаем деньги и фильтр, по которому ихбудем выдавать(ретёрнуть)
-    const filteredMoney = moneyFilter(грошы, фильтръ)
 
-    const addMoney = (banknote: BanknotsType) => {
-        // Добавление денег сделаем в последнюю очередь, после настройки фильтров и отрисовки денег
+    const [todos, setTodos] = useState<TodosType[]>([])
+
+    const todoFromServer: ObjectType[] = [
+        {
+            // todolistId: v1(),
+            title: "What to learn",
+            filter: "all",
+            tasks: [
+                { taskId: v1(), title: "HTML&CSS", isDone: true },
+                { taskId: v1(), title: "JS", isDone: true }
+            ],
+            students: [
+                'Rick Kane',
+                'Finnlay Bentley',
+                'Samia North',
+                'Isaac Morton',
+                'Lily-Ann Clifford',
+                'Thalia Park',
+                'Sapphire Cruz',
+                'Cieran Vazquez',
+                'Anya Estes',
+                'Dominika Field',
+                'Rosanna Chung',
+                'Safiyah Davey',
+                'Ryley Beasley',
+                'Kalvin Trejo',
+                'Evie-Mae Farrell',
+                'Juliet Valencia',
+                'Astrid Austin',
+                'Lyle Montgomery',
+                'Nisha Mora',
+                'Kylie Callaghan',
+                'Star Wilks',
+                'Marissa Colley',
+                'Asa Fuller',
+                'Leigh Kemp',
+                'Avleen Dawson',
+                'Sammy Bonilla',
+                'Acacia Becker',
+                'Coral Shepherd',
+                'Melina Molina',
+                'Kiran Bailey',
+                'Clara Escobar',
+                'Alexandru Horn',
+                'Brandon-Lee Mercado',
+                'Elouise Weston',
+                'King Long',
+                'Kerri Searle',
+                'Kanye Hamer',
+                'Elwood Benitez',
+                'Mikail Whitaker',
+                'Bobby Hardy',
+                'Talha Ferry',
+                'Priscilla Landry',
+                'Olivia-Grace Cain',
+                'Kiaan Wallace',
+                'Wesley Padilla90',
+                'Ella-Grace Wooten91',
+                'Kaif Molloy92',
+                'Kamal Broadhurst93',
+                'Bianca Ferrell94',
+                'Micheal Talbot95',
+            ]
+        },
+        {
+            // todolistId: v1(),
+            title: "What to do",
+            filter: "all",
+            tasks: [
+                { taskId: v1(), title: "HTML&CSS2", isDone: true },
+                { taskId: v1(), title: "JS2", isDone: true }
+            ],
+            students: [
+                'Jago Wormald1',
+                'Saul Milne2',
+                'Aariz Hester3',
+                'Dion Reeve4',
+                'Anisa Ortega5',
+                'Blade Cisneros6',
+                'Malaikah Phelps7',
+                'Zeeshan Gallagher8',
+                'Isobella Vo9',
+                'Rizwan Mathis10',
+                'Menaal Leach11',
+                'Kian Walton12',
+                'Orion Lamb13',
+                'Faizah Huynh14',
+                'Crystal Vaughan15',
+                'Vivien Hickman16',
+                'Stuart Lu17',
+                'Karol Davison18',
+                'Dario Burns19',
+                'Chloe Rich20',
+                'Martyna Felix',
+                'Nida Glass',
+                'Maeve Miles',
+                'Hasnain Puckett',
+                'Ayman Cano',
+                'Safwan Perry',
+                'Fox Kelly',
+                'Louise Barlow',
+                'Malaki Mcgill',
+                'Leanna Cline',
+                'Willard Hodge',
+                'Amelia Dorsey',
+                'Kiah Porter',
+                'Jeanne Daly',
+                'Mohsin Armstrong',
+                'Laurie Rangel',
+                'Princess Tierney',
+                'Kasim Kendall',
+                'Darryl Cope',
+                'Elysha Ray',
+                'Liyana Harris',
+                'Kashif Blackburn',
+                'Atif Zimmerman',
+                'Sila Hartley',
+                'Ralphie Hebert',
+            ]
+        }
+    ]
+
+    useEffect(() => {
+        setTodos(todoFromServer.map(t => ({ todolistId: v1(), ...t })))
+    }, [])
+
+
+    function removeTask(taskId: string, todolistId: string) {
+        setTodos(todos.map(el => el.todolistId === todolistId
+            ? { ...el, tasks: el.tasks.filter(t => t.taskId !== taskId) }
+            : el
+        ))
     }
 
-    const removeMoney = (banknote: BanknotsType) => {
-        // Снятие денег сделаем в последнюю очередь, после настройки фильтров и отрисовки денег
-       // const index = money.findIndex
-       //  if (index !== -1) {
-       //      setMoney(money.filter((el, i) => ...));
-       //  }
+    function addTask(title: string, todolistId: string) {
+        setTodos(todos.map(el => el.todolistId === todolistId ?
+            { ...el, tasks: [{ taskId: v1(), title: title, isDone: false }, ...el.tasks] }
+            : el
+        ))
+        console.log(title)
     }
+
+    function changeStatus(id: string, isDone: boolean, todolistId: string) {
+        setTodos(todos.map(el => el.todolistId === todolistId ?
+            { ...el, tasks: el.tasks.map(t => t.taskId === id ? { ...t, isDone: isDone } : t) } : el))
+    }
+
+    function changeFilter(value: FilterValuesType, todolistId: string) {
+        setTodos((prevstate) => (prevstate.map(tl => tl.todolistId === todolistId
+            ? { ...tl, filter: value }
+            : tl
+        )))
+    }
+
+    function removeTodolist(id: string) {
+        setTodos((prevstate) => (prevstate.filter(tl => tl.todolistId !== id)))
+    }
+
+    function removeAllTdl() {
+        setTodos([])
+    }
+
+    
 
     return (
         <div className="App">
-            <Country
-                data={filteredMoney}   //отрисовать будем деньги после фильтрации
-                setFilterValue={setFilterValue}  //useState передаем? Так можно было?!
-            />
+            <button onClick={removeAllTdl}>remove all todolists</button>
+            {
+                todos.map(tl => {
+                    let allTodolistTasks = tl.tasks;
+                    let tasksForTodolist = allTodolistTasks;
+
+                    if (tl.filter === "active") {
+                        tasksForTodolist = allTodolistTasks.filter(t => t.isDone === false);
+                    }
+                    if (tl.filter === "completed") {
+                        tasksForTodolist = allTodolistTasks.filter(t => t.isDone === true);
+                    }
+
+                    return <Todolist
+                        key={tl.todolistId}
+                        id={tl.todolistId}
+                        title={tl.title}
+                        tasks={tasksForTodolist}
+                        removeTask={removeTask}
+                        changeFilter={changeFilter}
+                        addTask={addTask}
+                        changeTaskStatus={changeStatus}
+                        filter={tl.filter}
+                        removeTodolist={removeTodolist}
+                    />
+                })
+            }
+
         </div>
     );
 }
