@@ -1,153 +1,105 @@
+import React, { useState } from 'react';
 import './App.css';
-import {v1} from "uuid";
-import {FlightTable} from "./FlightTable";
-import {AddNewItem} from "./components/AddNewItem";
-import styles from './Styles.module.css';
-import React, {useState} from "react";
+import { TaskType, Todolist } from './Todolist';
+import { v1 } from 'uuid';
+
+export type FilterValuesType = "all" | "active" | "completed";
+
+type TodolistsType = {
+    id: string,
+    title: string
+}
+
+type TasksType = {
+    [key: string]: SuperTaskType
+}
+
+type SuperTaskType = {
+    data: TaskType[]
+    filter: FilterValuesType
+}
 
 function App() {
-    //TODO: ТРИ задания от простого к сложному:
-    //TODO: 1. Не работает кнопка удаления маршрута (routes) в App ничего править не нужно -ok
-    //TODO: 2. Не работает ЧЕКБОКС -ошибки даже в APP! Вместо того чтобы передавать значение,в функции перещелкивается противоположное! -ok
-    //TODO: 3. Обновление МАРШРУТА И ДАТЫ научились работать без функции в App, это нормально? Но в App ничего править не нужно
-    //TODO: 3. Вначале почини ДАТУ, а потом убедись, что и ОБНОВЛЕНИЕ МАРШРУТА "починилось" каким-то волшебным образом, но так ли это?
 
+    let todolistId1 = v1();
+    let todolistId2 = v1();
 
-    const [flightTables, setFlightTables] = useState([
-        {
-            date: '2024-04-20',
-            flightTableID: v1(),
-            routes: [
-                {id: v1(), from: "Berlin", to: "Tokyo", isBooked: true},
-                {id: v1(), from: "Amsterdam", to: "Beijing", isBooked: true},
-                {id: v1(), from: "Paris", to: "Seoul", isBooked: false}
-            ]
+    let [todolists, setTodolists] = useState<Array<TodolistsType>>([
+        { id: todolistId1, title: "What to learn" },
+        { id: todolistId2, title: "What to buy" }
+    ])
+
+    let [tasks, setTasks] = useState<TasksType>({
+        [todolistId1]: {
+            data: [
+                { id: v1(), title: "HTML&CSS1111", isDone: true },
+                { id: v1(), title: "JS1111", isDone: true }
+            ],
+            filter: "all"
         },
-        {
-            date: '2024-05-15',
-            flightTableID: v1(),
-            routes: [
-                {id: v1(), from: "Sydney", to: "Los Angeles", isBooked: true},
-                {id: v1(), from: "Melbourne", to: "San Francisco", isBooked: false},
-                {id: v1(), from: "Brisbane", to: "Vancouver", isBooked: false}
-            ]
-        },
-        {
-            date: '2024-06-10',
-            flightTableID: v1(),
-            routes: [
-                {id: v1(), from: "London", to: "New York", isBooked: true},
-                {id: v1(), from: "Madrid", to: "Miami", isBooked: false},
-                {id: v1(), from: "Rome", to: "Toronto", isBooked: true}
-            ]
+        [todolistId2]: {
+            data: [
+                { id: v1(), title: "HTML&CSS22222", isDone: true },
+                { id: v1(), title: "JS2222", isDone: true }
+            ],
+            filter: "all"
         }
-    ]);
+    });
 
-    const addNewFTRoute = (flightTableID: string, from: string, to: string) => {
-        const newRoute = {id: v1(), from, to, isBooked: true};
-        setFlightTables(prevState =>
-            prevState.map(table =>
-                table.flightTableID === flightTableID
-                    ? {...table, routes: [...table.routes, newRoute]}
-                    : table
-            )
-        );
-    };
+    const removeTodolist = (todolistId: string) => {
+        setTodolists(todolists.filter(el => el.id !== todolistId))
+        delete tasks[todolistId]
+        console.log(tasks)
+    }
 
-    const removeFTRoute = (flightTableID: string, routeID: string) => {
-        setFlightTables(flightTables.map(flightTable =>
-            flightTable.flightTableID === flightTableID
-                ? {
-                    ...flightTable,
-                    routes: flightTable.routes.filter(route => route.id !== routeID)
-                }
-                : flightTable
-        ));
-    };
+    function removeTask(todolistId: string, taskId: string) {
+        setTasks((prevState) => ({
+            ...prevState, [todolistId]: { ...prevState[todolistId], data: prevState[todolistId].data.filter(el => el.id !== taskId) }
+        }))
+    }
 
-    const toggleFTIsBooked = (flightTableID: string, routeID: string, newBooked:boolean) => {
-        setFlightTables(flightTables.map(ft =>
-            ft.flightTableID === flightTableID ? {
-                    ...ft,
-                    routes: ft.routes.map(route =>
-                        route.id === routeID ? {...route, isBooked: newBooked} : route
-                    )
-                }
-                : ft
-        ));
-    };
+    function addTask(todolistId: string, title: string) {
+        let newTask = { id: v1(), title: title, isDone: false };
+        setTasks((prevState) => (
+            { ...prevState, [todolistId]: { ...prevState[todolistId], data: [newTask, ...prevState[todolistId].data] } }
+        ))
+    }
 
-    const addNewFT = (from: string, to: string) => {
-        const newFlightTable = {
-            date: new Date().toISOString().split('T')[0], //установит текущую дату для нового flight table
-            flightTableID: v1(),
-            routes: [
-                {id: v1(), from, to, isBooked: false}
-            ]
-        };
-        setFlightTables([...flightTables, newFlightTable]);
-    };
+    function changeStatus(todolistId: string, taskId: string, newIsDone: boolean) {
+        setTasks( (prevState) => (
+            {...prevState,[todolistId]:{...prevState[todolistId],data:prevState[todolistId].data.map(el=> el.id === taskId ? {...el, isDone: newIsDone} : el)}}
+        ))
+    }
 
-    const removeFT = (flightTableID: string) => {
-        setFlightTables(flightTables.filter(ft => ft.flightTableID !== flightTableID));
-    };
-
-    const updateFTDate = (flightTableID: string, newDate: string) => {
-        setFlightTables(flightTables.map(ft =>
-            ft.flightTableID === flightTableID ? {...ft, date: newDate} : ft
-        ));
-    };
-
-    const updateFTRoutesFrom = (flightTableID: string, routeID: string, newFrom: string) => {
-        setFlightTables(flightTables.map(ft =>
-            ft.flightTableID === flightTableID ? {
-                ...ft,
-                routes: ft.routes.map(route =>
-                    route.id === routeID ? {...route, from: newFrom} : route
-                )
-            } : ft
-        ));
-    };
-
-    const updateFTRoutesTo = (flightTableID: string, routeID: string, newTo: string) => {
-        setFlightTables(flightTables.map(ft =>
-            ft.flightTableID === flightTableID ? {
-                ...ft,
-                routes: ft.routes.map(route =>
-                    route.id === routeID ? {...route, to: newTo} : route
-                )
-            } : ft
-        ));
-    };
+    function changeFilter(todolistId: string, value: FilterValuesType) {
+        setTasks ((prevState) => (
+            {...prevState,[todolistId]:{...prevState[todolistId],filter: value}}
+        ))
+    }
 
     return (
-        <>
-            <header className={styles.header}>
-                <AddNewItem
-                    title={"Add New FlightTable"}
-                    onClick={addNewFT}
-                />
-            </header>
-            <div className={styles.appContainer}>
-                {flightTables.map(el => {
-                    return (
-                        <FlightTable
-                            key={el.flightTableID}
-                            flightTableID={el.flightTableID}
-                            date={el.date}
-                            routes={el.routes}
-                            toggleFTIsBooked={toggleFTIsBooked}
-                            removeFT={removeFT}
-                            updateFTDate={updateFTDate}
-                            updateFTRoutesFrom={updateFTRoutesFrom}
-                            updateFTRoutesTo={updateFTRoutesTo}
-                            removeFTRoute={removeFTRoute}
-                            addNewFTRoute={addNewFTRoute}
-                        />
-                    )
-                })}
-            </div>
-        </>
+        <div className="App">
+            {todolists.map((el) => {
+                let tasksForTodolist = tasks[el.id].data;
+
+                return (
+                    <Todolist
+                        key={el.id}
+                        todolistId={el.id}
+                        title={el.title}
+                        tasks={tasksForTodolist}
+                        removeTask={removeTask}
+                        changeFilter={changeFilter}
+                        addTask={addTask}
+                        changeTaskStatus={changeStatus}
+                        filter={tasks[el.id].filter}
+                        removeTodolist={removeTodolist}
+                    />
+                )
+            })}
+
+
+        </div>
     );
 }
 
